@@ -1,0 +1,5 @@
+SPDXVersion: SPDX-2.1
+PackageName: Log4J Viewer
+PackageOriginator: wtlnw
+PackageHomePage: https://github.com/wtlnw/log4j-viewer-intellij
+PackageLicenseDeclared: Apache-2.0 OR EPL-2.0

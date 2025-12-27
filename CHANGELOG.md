@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# log4j-viewer-intellij Changelog
+# Log4J Viewer Changelog
 
 ## [Unreleased]
 ### Added

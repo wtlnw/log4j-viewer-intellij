@@ -1,15 +1,27 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<!-- Plugin Configuration File: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.wtlnw.log4jviewerintellij</id>
-    <name>log4j-viewer-intellij</name>
+    <id>org.wtlnw.intellij.log4j.viewer</id>
+    <name>Log4j Viewer</name>
     <vendor>wtlnw</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
+    <resource-bundle>messages.LogEventBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.wtlnw.log4jviewerintellij.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.wtlnw.log4jviewerintellij.startup.MyProjectActivity" />
+        <applicationService
+                serviceImplementation="org.wtlnw.intellij.log4j.viewer.settings.LogEventSettingsService"
+        />
+        <applicationConfigurable
+                parentId="tools"
+                instance="org.wtlnw.intellij.log4j.viewer.settings.LogEventConfigurable"
+                id="org.wtlnw.intellij.log4j.viewer.settings.LogEventConfigurable"
+                bundle="messages.LogEventBundle"
+                key="org.wtlnw.intellij.log4j.viewer.settings.LogEventConfigurable.TITLE"
+        />
+        <toolWindow id="org.wtlnw.intellij.log4j.viewer"
+                    factoryClass="org.wtlnw.intellij.log4j.viewer.ui.LogEventToolWindowFactory"
+                    anchor="bottom"
+        />
     </extensions>
 </idea-plugin>
