@@ -23,6 +23,7 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,8 +32,10 @@ import org.wtlnw.intellij.log4j.viewer.core.filter.LogEventFilter;
 import org.wtlnw.intellij.log4j.viewer.core.filter.LogEventProperty;
 import org.wtlnw.intellij.log4j.viewer.core.filter.LogEventPropertyFilter;
 import org.wtlnw.intellij.log4j.viewer.i18n.LogEventBundle;
+import org.wtlnw.intellij.log4j.viewer.settings.LogEventConfigurable;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.util.ArrayList;
@@ -105,10 +108,13 @@ public class LogEventFilterDialog extends DialogWrapper {
 
     @Override
     protected @Nullable JComponent createCenterPanel() {
-        final JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        final LogEventProperty[] properties = LogEventProperty.values();
 
-        for (final LogEventProperty property : LogEventProperty.values()) {
+        final JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createEmptyBorder(UIUtil.LARGE_VGAP, 0, 0, 0));
+        panel.setLayout(new GridLayout(properties.length, 1));
+
+        for (final LogEventProperty property : properties) {
             panel.add(createPropertyGroup(property));
         }
 
@@ -116,22 +122,22 @@ public class LogEventFilterDialog extends DialogWrapper {
     }
 
     private Component createPropertyGroup(final LogEventProperty property) {
-        final JPanel group = new JPanel();
-        group.setLayout(new BorderLayout());
-        group.setBorder(BorderFactory.createTitledBorder(JBUI.Borders.customLine(JBColor.border()), LogEventBundle.message(property)));
-
         final Map<String, Object> filter = _filters.get(property);
-        final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(LogEventBundle.message(property), new DefaultActionGroup(
-                createEnableAction(filter),
-                Separator.create(),
-                createMatchCaseAction(filter),
-                createRegexAction(filter),
-                createWholeWordAction(filter),
-                Separator.create(),
-                createInverseAction(filter)
-        ), true);
-        toolbar.setTargetComponent(group);
-        group.add(toolbar.getComponent(), BorderLayout.EAST);
+
+        final JPanel group = new JPanel();
+        group.setLayout(new BorderLayout(0, UIUtil.DEFAULT_VGAP));
+
+        // add separator instead of title border to preserve consistent UI look and feel
+        group.add(LogEventConfigurable.separator(LogEventBundle.message(property)), BorderLayout.NORTH);
+
+        // add a spacer to the left and bottom of the panel
+        final Border spacerBorder = BorderFactory.createEmptyBorder(UIUtil.DEFAULT_VGAP, UIUtil.DEFAULT_HGAP * 2, UIUtil.DEFAULT_VGAP, UIUtil.DEFAULT_HGAP);
+        final JPanel spacerLeft = new JPanel();
+        spacerLeft.setBorder(spacerBorder);
+        group.add(spacerLeft, BorderLayout.WEST);
+        final JPanel spacerBottom = new JPanel();
+        spacerBottom.setBorder(spacerBorder);
+        group.add(spacerBottom, BorderLayout.SOUTH);
 
         final JBTextField input = new JBTextField();
         input.setColumns(48);
@@ -143,6 +149,18 @@ public class LogEventFilterDialog extends DialogWrapper {
             }
         });
         group.add(input);
+
+        final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(LogEventBundle.message(property), new DefaultActionGroup(
+                createEnableAction(filter),
+                Separator.create(),
+                createMatchCaseAction(filter),
+                createRegexAction(filter),
+                createWholeWordAction(filter),
+                Separator.create(),
+                createInverseAction(filter)
+        ), true);
+        toolbar.setTargetComponent(group);
+        group.add(toolbar.getComponent(), BorderLayout.EAST);
 
         // add validator for this property
         _validators.add(() -> {
