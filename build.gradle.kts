@@ -34,8 +34,10 @@ dependencies {
     implementation(libs.bundles.log4j)
     implementation(libs.bundles.jackson)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.junit5)
     testImplementation(libs.opentest4j)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly(libs.junit4)
 
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
@@ -136,6 +138,41 @@ tasks {
 
     publishPlugin {
         dependsOn(patchChangelog)
+    }
+
+    // make sure to exclude log4j tests from default unit testing
+    test {
+        useJUnitPlatform {
+            excludeTags("log4j")
+        }
+    }
+
+    // fork a different jvm for explicit log4j tests in order to
+    // bypass IntelliJ Platform SLF4J bindings.
+    val log4jTest = register<Test>("log4jTest") {
+        description = "Runs Log4j tests separately."
+        group = "verification"
+
+        useJUnitPlatform {
+            includeTags("log4j")
+        }
+
+        // Force Log4j BEFORE classloading
+        jvmArgs(
+            "-Dlog4j2.loggerContextFactory=org.apache.logging.log4j.core.impl.Log4jContextFactory",
+            "-Dlog4j2.disable.jmx=true"
+        )
+
+        // Use same compiled tests, but clean classpath
+        testClassesDirs = sourceSets.test.get().output.classesDirs
+        classpath = sourceSets.test.get().runtimeClasspath
+
+        // run log4j tests after regular ones
+        shouldRunAfter(test)
+    }
+
+    check {
+        dependsOn(log4jTest)
     }
 }
 

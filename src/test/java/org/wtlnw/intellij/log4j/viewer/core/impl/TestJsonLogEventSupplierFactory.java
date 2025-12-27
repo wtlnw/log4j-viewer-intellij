@@ -30,6 +30,7 @@ import org.apache.logging.log4j.core.config.ConfigurationFactory;
 import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.wtlnw.intellij.log4j.viewer.core.api.LogEventSupplierFactory;
 import org.wtlnw.intellij.log4j.viewer.core.impl.LogEventServer;
@@ -39,6 +40,7 @@ import org.wtlnw.intellij.log4j.viewer.core.impl.JsonLogEventSupplierFactory;
 /**
  * Tests for {@link JsonLogEventSupplierFactory}.
  */
+@Tag("log4j")
 public class TestJsonLogEventSupplierFactory {
 
 	private static final String CONFIG_COMPLETE = """
