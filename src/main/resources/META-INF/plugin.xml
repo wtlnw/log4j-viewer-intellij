@@ -1,6 +1,6 @@
 <!-- Plugin Configuration File: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>org.wtlnw.intellij.log4j.viewer</id>
+    <id>org.wtlnw.log4j.viewer</id>
     <name>Log4j Viewer</name>
     <vendor>wtlnw</vendor>
 
