@@ -68,7 +68,7 @@ public enum LogEventProperty {
 	 * @param name     see {@link #getName()}
 	 * @param accessor see {@link #getValueProvider()}
 	 */
-	private LogEventProperty(final String name, final Function<LogEvent, String> accessor) {
+	LogEventProperty(final String name, final Function<LogEvent, String> accessor) {
 		_name = name;
 		_accessor = accessor;
 	}

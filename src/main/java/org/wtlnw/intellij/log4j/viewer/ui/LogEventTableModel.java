@@ -181,7 +181,7 @@ public class LogEventTableModel extends AbstractTableModel {
                 break;
             default:
                 break;
-        };
+        }
     }
 
     /**
@@ -244,7 +244,7 @@ public class LogEventTableModel extends AbstractTableModel {
     /**
      * Enumeration defining model update types.
      */
-    private static enum ModelUpdateType {
+    private enum ModelUpdateType {
 
         /**
          * Enumeration literal indicating that no update of table data occurred.

@@ -54,7 +54,7 @@ public interface LogEventSupplierFactory {
 	 * thread.
 	 * </p>
 	 */
-	public interface LogEventSupplier {
+	interface LogEventSupplier {
 		
 		/**
 		 * @return the next {@link LogEvent} read from the associated
