@@ -15,6 +15,7 @@
 package org.wtlnw.intellij.log4j.viewer.ui;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.ActivityTracker;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -301,8 +302,8 @@ public class LogEventToolWindowContent implements Disposable {
             }
         };
 
-        // listen to server state changes and update the action
-        Objects.requireNonNull(_server).addServerListener(state -> action.update(AnActionEvent.createEvent(action, CustomizedDataContext.EMPTY_CONTEXT, null, PLACE_TOOLBAR, ActionUiKind.NONE, null)));
+        // listen to server state changes and trigger action update
+        Objects.requireNonNull(_server).addServerListener(state -> ActivityTracker.getInstance().inc());
 
         return action;
     }
