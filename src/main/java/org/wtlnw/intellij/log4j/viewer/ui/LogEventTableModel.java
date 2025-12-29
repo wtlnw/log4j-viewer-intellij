@@ -20,7 +20,6 @@ import org.wtlnw.intellij.log4j.viewer.core.filter.LogEventProperty;
 import org.wtlnw.intellij.log4j.viewer.core.util.LogEventRingBuffer;
 import org.wtlnw.intellij.log4j.viewer.i18n.LogEventBundle;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.Objects;
@@ -62,7 +61,7 @@ public class LogEventTableModel extends AbstractTableModel {
      * @param size   the maximum number of captured {@link LogEvent}s to be displayed
      * @param filter see {@link #getFilter()}
      */
-    public LogEventTableModel(final int size, @Nonnull final LogEventFilter filter) {
+    public LogEventTableModel(final int size, LogEventFilter filter) {
         _rawEvents = new LogEventRingBuffer(size);
         _tableData = new LogEventRingBuffer(size);
         _filter = Objects.requireNonNull(filter);
@@ -80,7 +79,7 @@ public class LogEventTableModel extends AbstractTableModel {
      *
      * @param filter see {@link #getFilter()}
      */
-    public void setFilter(@Nonnull final LogEventFilter filter) {
+    public void setFilter(final LogEventFilter filter) {
         _filter = Objects.requireNonNull(filter);
 
         locking(_lock.writeLock(), () -> {
@@ -150,7 +149,7 @@ public class LogEventTableModel extends AbstractTableModel {
      *
      * @param event the {@link LogEvent} to add
      */
-    public void put(@Nonnull final LogEvent event) {
+    public void put(final LogEvent event) {
         Objects.requireNonNull(event);
 
         // append the given event to the raw event buffer and update the table data
