@@ -22,6 +22,7 @@
         <toolWindow id="org.wtlnw.intellij.log4j.viewer"
                     factoryClass="org.wtlnw.intellij.log4j.viewer.ui.LogEventToolWindowFactory"
                     anchor="bottom"
+                    icon="/META-INF/pluginIcon.svg"
         />
     </extensions>
 </idea-plugin>
