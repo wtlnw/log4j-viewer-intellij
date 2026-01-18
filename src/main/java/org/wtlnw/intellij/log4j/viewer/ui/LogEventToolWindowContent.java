@@ -18,6 +18,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.DumbAwareToggleAction;
@@ -45,6 +46,7 @@ import org.wtlnw.intellij.log4j.viewer.core.impl.SerializedLogEventSupplierFacto
 import org.wtlnw.intellij.log4j.viewer.core.impl.XmlLogEventSupplierFactory;
 import org.wtlnw.intellij.log4j.viewer.i18n.LogEventBundle;
 import org.wtlnw.intellij.log4j.viewer.settings.LogEventSettings;
+import org.wtlnw.intellij.log4j.viewer.settings.LogEventSettingsListener;
 import org.wtlnw.intellij.log4j.viewer.settings.LogEventSettingsService;
 import org.wtlnw.intellij.log4j.viewer.ui.dialogs.LogEventDetailDialog;
 import org.wtlnw.intellij.log4j.viewer.ui.dialogs.LogEventFilterDialog;
@@ -147,11 +149,12 @@ public class LogEventToolWindowContent implements Disposable {
     }
 
     private JBTable createTable(final LogEventTableModel model) {
+        final LogEventTableCellRenderer renderer = new LogEventTableCellRenderer();
         final JBTable table = new JBTable(model);
         table.getTableHeader().setReorderingAllowed(false);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setShowColumns(true);
-        table.setDefaultRenderer(String.class, new LogEventTableCellRenderer());
+        table.setDefaultRenderer(String.class, renderer);
 
         // open the details dialog upon double-click on a table item
         table.addMouseListener(new MouseAdapter() {
@@ -172,6 +175,10 @@ public class LogEventToolWindowContent implements Disposable {
                 }
             }
         });
+
+        // listen to settings changes and update the renderer
+        ApplicationManager.getApplication().getMessageBus().connect(this)
+                .subscribe(LogEventSettingsListener.CHANGE_SETTINGS_TOPIC, (LogEventSettingsListener) renderer::loadColors);
 
         return table;
     }

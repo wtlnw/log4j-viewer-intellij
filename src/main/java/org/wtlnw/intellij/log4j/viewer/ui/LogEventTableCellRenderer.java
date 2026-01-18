@@ -23,8 +23,8 @@ import org.wtlnw.intellij.log4j.viewer.settings.LogEventSettingsService;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link DefaultTableCellRenderer} specialization using custom colors for rendering
@@ -36,12 +36,19 @@ public class LogEventTableCellRenderer extends DefaultTableCellRenderer {
      * A {@link Map} of {@link StandardLevel} to the configured {@link Color}
      * to be used for {@link LogEvent} text rendering.
      */
-    private final Map<StandardLevel, Color> _colors = new HashMap<>();
+    private final Map<StandardLevel, Color> _colors = new ConcurrentHashMap<>();
 
     /**
      * Create a {@link LogEventTableCellRenderer}.
      */
     public LogEventTableCellRenderer() {
+        loadColors();
+    }
+
+    /**
+     * Load the configured colors from {@link LogEventSettingsService}.
+     */
+    public void loadColors() {
         final LogEventSettings settings = LogEventSettingsService.getInstance().getState();
 
         _colors.put(StandardLevel.DEBUG, ColorUtil.fromHex(settings.colorDebug));
