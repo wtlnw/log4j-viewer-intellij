@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+### Changed
+- Apply changes to color settings without having to restart the viewer.
+
+### Fixed
+- Fix tool window icon not being displayed properly.
+
 ## [1.0.2] - 2025-12-29
 
 ### Fixed
