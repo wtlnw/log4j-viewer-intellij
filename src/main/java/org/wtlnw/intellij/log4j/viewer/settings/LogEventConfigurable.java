@@ -14,6 +14,7 @@
 
 package org.wtlnw.intellij.log4j.viewer.settings;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.options.Configurable;
@@ -221,6 +222,8 @@ public class LogEventConfigurable implements Configurable {
         settings.colorWarn = _colorWarn.getText();
         settings.colorError = _colorError.getText();
         settings.colorFatal = _colorFatal.getText();
+
+        ApplicationManager.getApplication().getMessageBus().syncPublisher(LogEventSettingsListener.CHANGE_SETTINGS_TOPIC).settingsChanged();
     }
 
     @Override
@@ -236,6 +239,8 @@ public class LogEventConfigurable implements Configurable {
         _colorWarn.setText(settings.colorWarn);
         _colorError.setText(settings.colorError);
         _colorFatal.setText(settings.colorFatal);
+
+        ApplicationManager.getApplication().getMessageBus().syncPublisher(LogEventSettingsListener.CHANGE_SETTINGS_TOPIC).settingsChanged();
     }
 
     /**
