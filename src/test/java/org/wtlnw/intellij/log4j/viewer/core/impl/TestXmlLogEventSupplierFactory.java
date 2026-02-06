@@ -153,7 +153,7 @@ public class TestXmlLogEventSupplierFactory {
 		}
 
 		sema.acquire();
-		server.stop();
+		server.stop(true);
 		
 		if (!errors.isEmpty()) {
 			Assertions.fail(errors.getFirst());

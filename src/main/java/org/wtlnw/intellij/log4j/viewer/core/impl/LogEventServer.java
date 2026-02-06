@@ -237,8 +237,11 @@ public class LogEventServer {
 				// notify all registered listener of acceptor error
 				_errorListeners.forEach(l -> l.accept("Acceptor thread encountered an error, server is going down.", e));
 
-				// server socket is broken, terminate the server
-				stop();
+				// Server socket is broken, terminate the server.
+				// WARNING: do NOT await termination here because we're running
+				// in the context of the executor and would thus prevent it from
+				// terminating!
+				stop(false);
 			}
 		});
 	}
@@ -376,18 +379,23 @@ public class LogEventServer {
 	 * accepted connections.
 	 * 
 	 * <p>
-	 * Calling threads are blocked until all connections are terminated.
+	 * Note: this method must not be called with {@code true} from within the
+	 * acceptor or workers threads as doing so would block them indefinitely.
 	 * </p>
-	 * 
+	 *
+	 * @param await {@code true} to block the calling thread until all connections
+	 *              are terminated, {@code false} to terminate without waiting
 	 * @throws IllegalStateException if the receiver was not started
 	 */
-	public synchronized void stop() throws IllegalStateException {
+	public synchronized void stop(final boolean await) throws IllegalStateException {
 		if (_executor == null) {
 			throw new IllegalStateException();
 		}
 
 		_executor.shutdown();
-		awaitTermination();
+		if (await) {
+			awaitTermination();
+		}
 		_executor = null;
 
 		// notify all registered listeners of server termination
@@ -413,7 +421,12 @@ public class LogEventServer {
 	/**
 	 * @return {@code true} if the receiver is running, {@code false} otherwise
 	 */
-	public synchronized boolean isRunning() {
-		return _executor != null && !_executor.isShutdown();
+	public boolean isRunning() {
+		// WARNING: do NOT inline this! We are assigning the reference
+		// to a local variable in order to perform two subsequent evaluations
+		// here and we don't want it to change midways.
+		final ExecutorService executor = _executor;
+
+		return executor != null && !executor.isShutdown();
 	}
 }
