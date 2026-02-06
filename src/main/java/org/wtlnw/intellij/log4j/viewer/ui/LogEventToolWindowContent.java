@@ -295,7 +295,7 @@ public class LogEventToolWindowContent implements Disposable {
                 if (state) {
                     _server.start();
                 } else {
-                    _server.stop();
+                    _server.stop(true);
                 }
             }
 
@@ -495,7 +495,7 @@ public class LogEventToolWindowContent implements Disposable {
     public void dispose() {
         // stop the server if it's running and release server reference
         if (Objects.requireNonNull(_server).isRunning()) {
-            _server.stop();
+            _server.stop(true);
             _server = null;
         }
 
