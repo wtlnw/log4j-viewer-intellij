@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix deadlock occurring when two LogEventServer instances are involved.
+
 ## [1.1.0] - 2026-01-18
 
 ### Changed
